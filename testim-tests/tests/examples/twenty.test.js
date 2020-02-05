@@ -160,3 +160,50 @@ describe("Log in", async () => {
     await waitForText(".NavButton__nav-button___34wHC", "LOG IN");
   });
 });
+
+describe("Checkout on booking", async () => {
+  beforeEach(async () => {
+    await go("http://demo.testim.io/");
+  });
+
+  test("checkout not shown initially", async () => {
+    const checkout = await evaluate(() =>
+      document.querySelector(".Checkout__headline-1___2KQaR")
+    );
+    expect(checkout).to.be.null;
+  });
+
+  test("checkout shown on booking", async () => {
+    await click(".BookButton__flat___1i5dr")
+    await waitForElement(".Checkout__headline-1___2KQaR")
+  });
+})
+
+describe("Checkout form", async () => {
+  beforeEach(async () => {
+    await go("http://demo.testim.io/");
+    await click(".BookButton__flat___1i5dr")
+    await waitForElement(".Checkout__headline-1___2KQaR")
+  });
+
+  test("promo code length less than five not accepted", async () => {
+  });
+
+  test("promo code decreases total", async () => {
+  });
+
+  test("promo code applied only once", async () => {
+  });
+
+  test("temperature of planet shown", async () => {
+  });
+
+  test("terms and condition initially unchecked", async () => {
+  });
+
+  test("terms and condition can be checked", async () => {
+  });
+
+  test("total amount properly displayed", async () => {
+  });
+})
