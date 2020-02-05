@@ -6,6 +6,7 @@ const {
   test,
   describe,
   beforeEach,
+  checkbox,
   type,
   waitForElement,
   evaluate,
@@ -187,23 +188,44 @@ describe("Checkout form", async () => {
   });
 
   test("promo code length less than five not accepted", async () => {
+    const beforeTotal = await text(".OrderSummary__headline-1___1lzsL")
+    await type("input[name=promo]", "1234")
+    await click(".OrderSummary__apply-button___3Cjeq")
+    const afterTotal = await text(".OrderSummary__headline-1___1lzsL")
+    expect(beforeTotal).to.equal(afterTotal)
   });
 
   test("promo code decreases total", async () => {
+    const beforeTotal = await text(".OrderSummary__headline-1___1lzsL")
+    await type("input[name=promo]", "12345")
+    await click(".OrderSummary__apply-button___3Cjeq")
+    const afterTotal = await text(".OrderSummary__headline-1___1lzsL")
+    expect(beforeTotal).to.not.equal(afterTotal)
+    expect(afterTotal).to.equal("$946.77")
   });
 
-  test("promo code applied only once", async () => {
+  test("promo code is applied only once", async () => {
+    await type("input[name=promo]", "12345")
+    await click(".OrderSummary__apply-button___3Cjeq")
+    const firstTotal = await text(".OrderSummary__headline-1___1lzsL")
+    expect(firstTotal).to.equal("$946.77")
+
+    await click(".OrderSummary__apply-button___3Cjeq")
+    const secondTotal = await text(".OrderSummary__headline-1___1lzsL")
+    expect(secondTotal).to.equal(firstTotal)
   });
 
   test("temperature of planet shown", async () => {
+    await waitForElement(".Climate__headline-1___pmwAe")
   });
 
   test("terms and condition initially unchecked", async () => {
-  });
-
-  test("terms and condition can be checked", async () => {
+    const isChecked = await checkbox(".theme__check___2B20W")
+    expect(isChecked).to.equal(false)
   });
 
   test("total amount properly displayed", async () => {
+    const total = await text(".OrderSummary__headline-1___1lzsL")
+    expect(total).to.equal("$1,183.46")
   });
 })
