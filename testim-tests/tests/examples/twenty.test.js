@@ -1,7 +1,16 @@
 "use strict";
 
 // Import Testim Dev Kit methods
-const { go, test, describe, beforeEach, text } = require("testim");
+const {
+  go,
+  test,
+  describe,
+  beforeEach,
+  type,
+  waitForElement,
+  evaluate,
+  waitForText
+} = require("testim");
 
 // Import chai assertion library
 const { expect } = require("chai");
@@ -76,13 +85,78 @@ describe("Load more", async () => {
     const beforePlanets = await evaluate(() =>
       document.querySelectorAll(".theme__content___Fopuf")
     );
-	expect(beforePlanets.length).to.eq(6);
-	
-	await click('.Gallery__cta-button___3kPlJ')
-	// After click
+    expect(beforePlanets.length).to.eq(6);
+
+    await click(".Gallery__cta-button___3kPlJ");
+    // After click
     const afterPlanets = await evaluate(() =>
       document.querySelectorAll(".theme__content___Fopuf")
     );
     expect(afterPlanets.length).to.eq(9);
+  });
+
+  test("disabled when no more elements to show", async () => {
+    // First click
+    await click(".Gallery__cta-button___3kPlJ");
+    const beforePlanets = await evaluate(() =>
+      document.querySelectorAll(".theme__content___Fopuf")
+    );
+    expect(beforePlanets.length).to.eq(9);
+
+    await click(".Gallery__cta-button___3kPlJ");
+    // After second click
+    const afterPlanets = await evaluate(() =>
+      document.querySelectorAll(".theme__content___Fopuf")
+    );
+    expect(afterPlanets.length).to.eq(beforePlanets.length);
+  });
+});
+
+describe("Log in", async () => {
+  beforeEach(async () => {
+    await go("http://demo.testim.io/");
+  });
+
+  test("log in form shown properly", async () => {
+    await click(".NavButton__nav-button___34wHC");
+    await waitForText(".Login__headline-1___qo4Tz", "LOGIN");
+  });
+
+  test("empty form does not log in", async () => {
+    await click(".NavButton__nav-button___34wHC");
+    await click(".LoginButton__primary___38GOe")
+    const loginTitle = await text(".Login__headline-1___qo4Tz")
+    expect(loginTitle).to.equal("LOGIN")
+  });
+
+  test("cancel works properly", async () => {
+    await click(".NavButton__nav-button___34wHC");
+    await waitForText(".Login__headline-1___qo4Tz", "LOGIN");
+
+    await click(".LoginButton__accent___hdTFW");
+    const loginTitle = await evaluate(() =>
+      document.querySelector(".Login__headline-1___qo4Tz")
+    );
+    expect(loginTitle).to.be.null;
+  });
+
+  test("logging in works", async () => {
+    await click(".NavButton__nav-button___34wHC");
+    await type("input[type=text]", "test");
+    await type("input[type=password]", "test");
+    await submit("#login");
+    await waitForText(".mui-btn--primary span", "HELLO, JOHN ");
+  });
+
+  test("logging out works", async () => {
+    await click(".NavButton__nav-button___34wHC");
+    await type("input[type=text]", "test");
+    await type("input[type=password]", "test");
+    await submit("#login");
+    await waitForElement(".mui-btn");
+
+    await click(".mui-btn");
+    await click(".mui-dropdown a");
+    await waitForText(".NavButton__nav-button___34wHC", "LOG IN");
   });
 });
