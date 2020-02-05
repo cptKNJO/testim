@@ -228,4 +228,21 @@ describe("Checkout form", async () => {
     const total = await text(".OrderSummary__headline-1___1lzsL")
     expect(total).to.equal("$1,183.46")
   });
+
+  test("pay now disabled without valid input", async () => {
+    const payNow = await evaluate(() => document.querySelector(".OrderSummary__pay-button___1CG2e").getAttribute("disabled"))
+    expect(payNow).to.equal("")
+  });
+
+  test("pay now clickable with valid input", async () => {
+    // Fill customer information and check terms and conditions
+    await type(".CustomerInfo__input___eFffe:nth-child(1)", 'test')
+    await type(".CustomerInfo__input___eFffe:nth-child(2)", 'test@example.com')
+    await type(".CustomerInfo__input___eFffe:nth-child(3)", '000-00-0000')
+    await type(".CustomerInfo__input___eFffe:nth-child(4)", '202-555-0160')
+    await click('.theme__check___2B20W')
+
+    const payNow = await evaluate(() => document.querySelector(".OrderSummary__pay-button___1CG2e").getAttribute("disabled"))
+    expect(payNow).to.be.null
+  });
 })
