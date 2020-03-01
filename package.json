@@ -10,7 +10,7 @@
         "cross-env": "5.2.1"
     },
     "scripts": {
-        "start": "cross-env NODE_OPTIONS=--max-old-space-size=8196 testim run \"./tests/**/*.test.js\" -m selenium --require-credentials",
+        "start": "cross-env NODE_OPTIONS=--max-old-space-size=8196 testim run \"./tests/*.test.js\" -m selenium --require-credentials",
         "test": "npm start",
         "dev-test": "cross-env NODE_OPTIONS=--max-old-space-size=8196 testim run \"./tests/**/*.test.js\" -m selenium --require-credentials --reporters=chrome,console",
         "debug": "cross-env NODE_OPTIONS='--max-old-space-size=8196 --inspect=9229' testim run \"./tests/**/*.test.js\" -m selenium --require-credentials",
