@@ -11,9 +11,9 @@ const {
   Locator
 } = require('testim');
 
-const url = 'https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe';
-
 Locator.set(require('./locators/locators.js'));
+
+const url = 'https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe';
 
 describe('iframe page loads component', () => {
   beforeEach(async () => {
