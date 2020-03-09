@@ -18,17 +18,6 @@ Locator.set(require('./locators/locators.js'));
 
 const url = 'https://www.w3schools.com/';
 
-describe('main page', () => {
-  beforeEach(async () => {
-    await go(url);
-  });
-  // test('search bar shown', async () => {})
-  // test('form can be submitted', async () => {})
-  // test('search for available term', async () => {})
-  // test('search for unavailable term', async () => {})
-  // test('', async () => {})
-});
-
 describe('search form', () => {
   beforeEach(async () => {
     await go(url);
@@ -45,14 +34,14 @@ describe('search form', () => {
     await waitForNoElement(l('.gsib_a'));
   });
 
-  test.only('search bar icon submits on click', async () => {
+  test('search bar icon submits on click', async () => {
     await waitForElement(l('.gsib_a'));
     await type(l('Custom_Search'), 'slide');
     await click(l('.gsc-search-button-v2'));
     await waitForElement(l('About_1,520_results_(0.20_seconds)'));
   });
 
-  test.only('search bar cleared on clicking "x"', async () => {
+  test('search bar cleared on clicking "x"', async () => {
     await waitForElement(l('.gsib_a'));
     await type(l('Custom_Search'), 'slide');
     await click(l('.gscb_a'));
