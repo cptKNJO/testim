@@ -141,47 +141,19 @@ describe("mobile menu items", () => {
   });
 });
 
-describe("mobile menu from section", () => {
+describe.only("mobile menu from section", () => {
   beforeEach(async () => {
-    await go(url);
     await resize({
       width: 768,
       height: 500
     });
-    await waitForElement(l("[onclick='w3_open()']"));
-    await click(l("[onclick='w3_open()']"));
-    await waitForElement(l("_TUTORIALS_REFERENCES_EXAMPLES_EXER"));
+    await go("https://www.w3schools.com/html/default.asp");
   });
 
-  test("tutorials menu", async () => {
-    await click(l("TUTORIALS"));
-    await click(l("Learn_HTML"));
-    await waitForElement(l("Page_Heading"));
-    const heading = await text(l("Page_Heading"));
-    expect(heading).to.have.string("HTML Tutorial");
-  });
-
-  test("references menu", async () => {
-    await click(l("REFERENCES"));
-    await click(l("HTML_Tag_Reference"));
-    await waitForElement(l("Page_Heading"));
-    const heading = await text(l("Page_Heading"));
-    expect(heading).to.have.string("HTML Element Reference");
-  });
-
-  test("examples menu", async () => {
-    await click(l("EXAMPLES"));
-    await click(l("HTML_Examples"));
-    await waitForElement(l("Page_Heading"));
-    const heading = await text(l("Page_Heading"));
-    expect(heading).to.have.string("HTML Examples");
-  });
-
-  test("exercises menu", async () => {
-    await click(l("EXERCISES"));
-    await click(l("HTML_Exercises"));
-    await waitForElement(l("Page_Heading"));
-    const heading = await text(l("Page_Heading"));
-    expect(heading).to.have.string("HTML Exercises");
-  });
+  test("correct title", async () => {});
+  test("home icon present", async () => {});
+  test("home icon works", async () => {});
+  test("extended navigation menu present", async () => {});
+  test("hamburger icon displays section menu", async () => {});
+  test("more button shows main menu", async () => {});
 });
