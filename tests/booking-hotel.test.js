@@ -67,7 +67,7 @@ describe('searching', () => {
     );
   });
 
-  test.only('change adult number', async () => {
+  test('change adult number', async () => {
     await click(l('Rooms_and_occupancy_4_adults__0_chi'));
     await dblclick(l('+'));
     const adults = await text(l('4_adults'));
