@@ -1,0 +1,22 @@
+module.exports = {
+  Logo: require('./locator.59sQ8nkjzl.json'),
+  Why_Kaldi: require('./locator.cWEonzyBsh.json'),
+  About: require('./locator.urn5JEG25z.json'),
+  About_our_values: require('./locator.AWLnSecN6Y.json'),
+  Products: require('./locator.fNmJxZ2AuB.json'),
+  Our_Coffee: require('./locator.kNqDYFtoK8.json'),
+  Blog: require('./locator.IGt8kyDuEw.json'),
+  Latest_Stories: require('./locator.TRF0VwmEur.json'),
+  LmI66MgxpU: require('./locator.LmI66MgxpU.json'),
+  '.is-multiline_>_:nth-child(1)_.titl': require('./locator.2OxLtJd9Y4.json'),
+  A_beginners_guide_to_brewing_with_C: require('./locator.HAqIvTiL1D.json'),
+  Contact: require('./locator.5I6bC6XaId.json'),
+  Tags_brewing_chemex: require('./locator.yt3tuIm6NT.json'),
+  brewing_chemex: require('./locator.2KabxO81ai.json'),
+  Your_name: require('./locator.w57l7pP4cC.json'),
+  Email: require('./locator.LXf2oPa5um.json'),
+  Message: require('./locator.cHxde0yeAz.json'),
+  'Thank_you!': require('./locator.JRZYZa3HUR.json'),
+  Form_Examples: require('./locator.4DrLphYFt3.json'),
+  Hi_people: require('./locator.j4V6E5zfUd.json')
+};
