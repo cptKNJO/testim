@@ -3,8 +3,11 @@
 const expect = require('chai').expect;
 const {
   click,
+  evaluate,
+  getCookie,
   go,
   resize,
+  setCookie,
   scrollToElement,
   sleep,
   test,
@@ -82,5 +85,49 @@ describe('navigation', () => {
   test('form examples page', async () => {
     await click(l('Form_Examples'));
     await waitForText(l('Hi_people'), 'Hi people');
+  });
+
+  test.only('no cookies on site', async () => {
+    const cookieOnSite = await evaluate(() => {
+      return document.cookie;
+    });
+
+    expect(cookieOnSite).to.equal('');
+  });
+
+  test.only('sets and gets cookies', async () => {
+    const cookieData = {
+      name: 'test',
+      value: '123'
+    };
+
+    await setCookie(cookieData);
+
+    const cookie = await getCookie('test');
+
+    expect(cookie.name).to.equal(cookieData.name);
+    expect(cookie.value).to.equal(cookieData.value);
+  });
+
+  test.only('sets and gets httpOnly cookie', async () => {
+    const cookieData = {
+      name: 'test',
+      value: '123',
+      httpOnly: true
+    };
+
+    await setCookie(cookieData);
+
+    const cookie = await getCookie('test');
+
+    expect(cookie.name).to.equal(cookieData.name);
+    expect(cookie.value).to.equal(cookieData.value);
+    expect(cookie.httpOnly).to.equal(cookieData.httpOnly);
+
+    const cookieOnSite = await evaluate(() => {
+      return document.cookie;
+    });
+
+    expect(cookieOnSite).to.not.contain('test');
   });
 });
