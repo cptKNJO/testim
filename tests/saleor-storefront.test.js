@@ -1,76 +1,208 @@
-'use strict';
+"use strict";
 
-const expect = require('chai').expect;
+const expect = require("chai").expect;
 const {
+  evaluate,
+  exists,
   go,
+  hover,
   click,
-  dblclick,
   waitForElement,
+  waitForNoElement,
   waitForText,
-  sendCharacter,
+  scrollToElement,
   test,
   text,
   type,
   l,
   Locator
-} = require('testim');
+} = require("testim");
 
-Locator.set(require('./locators/locators.js'));
+Locator.set(require("./locators/locators.js"));
 
-describe('searching', () => {
+describe("basic elements", () => {
   beforeEach(async () => {
-    await go('https://www.booking.com/');
-    await waitForElement(l('Booking.com_Online_Hotel_Reservatio'));
+    await go("https://demo.saleor.io/product/white-plimsolls/88/");
   });
 
-  test('search form present', async () => {
-    await waitForElement('#frm');
+  test("item takes user to product page", async () => {
+    await waitForElement("h3");
+    const product = await text("h3");
+    expect(product).to.equal("White Plimsolls");
   });
 
-  test('search works', async () => {
-    await type(l('Where_are_you_going?'), 'Lon');
-    await click(l('London_Greater_London,_United_Kingd'));
-    await click(
-      '#frm div.bui-calendar__content > div:nth-child(1) > table > tbody > tr:nth-child(3) > td:nth-child(3)'
+  test("first picture shown in set by default", async () => {
+    const imageSrc = await evaluate(() =>
+      document
+        .querySelector(
+          "div.product-page__product__gallery > div > div:nth-child(2) img"
+        )
+        .getAttribute("src")
     );
-    await click(
-      '#frm div.bui-calendar__content > div:nth-child(1) > table > tbody > tr:nth-child(3) > td:nth-child(5)'
-    );
-    await click(l('Search'));
-    await waitForText(l('London'), 'London');
+    expect(imageSrc).to.have.string("sneakers_02_1.png");
   });
 
-  test('search does not work for 30 days and above', async () => {
-    await type(l('Where_are_you_going?'), 'Lon');
-    await click(l('London_Greater_London,_United_Kingd'));
-    await click(
-      '#frm div.bui-calendar__content > div:nth-child(1) > table > tbody > tr:nth-child(3) > td:nth-child(3)'
+  test("different pictures displayed on hover", async () => {
+    let imageSrc = await evaluate(() =>
+      document
+        .querySelector(
+          "div.product-page__product__gallery > div > div:nth-child(2) img"
+        )
+        .getAttribute("src")
     );
-    // plus 30 days
-    await click(
-      '#frm div.bui-calendar__content > div:nth-child(2) > table > tbody > tr:nth-child(3) > td:nth-child(3)'
+    expect(imageSrc).to.have.string("sneakers_02_1.png");
+    await hover("div.product-page__product__gallery ul li:nth-child(2) img");
+    imageSrc = await evaluate(() =>
+      document
+        .querySelector(
+          "div.product-page__product__gallery > div > div:nth-child(2) img"
+        )
+        .getAttribute("src")
     );
-    await click(l('Search'));
+    expect(imageSrc).to.have.string("sneakers_02_2.png");
+  });
+
+  test("proper pagination", async () => {
     await waitForText(
-      l('Reservations_longer_than_30_nights_'),
-      'Reservations longer than 30 nights are not possible.'
+      l("Home_Footwear_White_Plimsolls"),
+      "HomeFootwearWhite Plimsolls"
     );
   });
 
-  test('search does not work without destination', async () => {
-    await type(l('Where_are_you_going?'), '');
-    await sendCharacter(l('Where_are_you_going?'), '\r');
-    await click(l('Search'));
-    await waitForText(
-      l('Error:_Enter_a_destination_to_start'),
-      'Error: Enter a destination to start searching.'
-    );
+  test("original price shown after selecting variant", async () => {
+    await waitForText(l("$44.10"), "$44.10");
+    await click(l(".product-description__variant-picke"));
+    await click(l("40"));
+    await waitForText(l("$49.00"), "$49.00");
+  });
+});
+
+describe("adding product to basket", () => {
+  beforeEach(async () => {
+    await go("https://demo.saleor.io/product/white-plimsolls/88/");
   });
 
-  test('change adult number', async () => {
-    await click(l('Rooms_and_occupancy_4_adults__0_chi'));
-    await dblclick(l('+'));
-    const adults = await text(l('4_adults'));
-    expect(adults).to.equal('4 adults');
+  test("cannot add to basket without selecting variant", async () => {
+    await waitForElement("button");
+    let disabled = await evaluate(() =>
+      document
+        .querySelector("div.product-page__product__info button")
+        .hasAttribute("disabled")
+    );
+    expect(disabled).to.equal(true);
+    await click(l(".product-description__variant-picke"));
+    await click(l("41"));
+
+    disabled = await evaluate(() =>
+      document
+        .querySelector("div.product-page__product__info button")
+        .hasAttribute("disabled")
+    );
+    expect(disabled).to.equal(false);
+  });
+
+  test("only item in stock cannot be added to basket", async () => {
+    await click(l(".product-description__variant-picke"));
+    await click(l("40"));
+    let disabled = await evaluate(() =>
+      document
+        .querySelector("div.product-page__product__info button")
+        .hasAttribute("disabled")
+    );
+    expect(disabled).to.equal(true);
+
+    await click(l(".product-description__variant-picke"));
+    await click(l("41"));
+    disabled = await evaluate(() =>
+      document
+        .querySelector("div.product-page__product__info button")
+        .hasAttribute("disabled")
+    );
+    expect(disabled).to.equal(false);
+  });
+
+  test("selecting variant opens up sidebar", async () => {
+    await click(l(".product-description__variant-picke"));
+    await waitForElement(l("PLEASE_SELECT_SHOE_SIZE"));
+  });
+
+  test("variant sidebar can be closed", async () => {
+    await click(l(".product-description__variant-picke"));
+
+    let sidebarVisible = await exists(l("PLEASE_SELECT_SHOE_SIZE"));
+    expect(sidebarVisible).to.equal(true);
+
+    await click(l(".sc-gqjmRU"));
+    sidebarVisible = await exists(l("PLEASE_SELECT_SHOE_SIZE"));
+    expect(sidebarVisible).to.equal(false);
+  });
+
+  test("cannot add to wishlist without logging in", async () => {
+    await click(l("ADD_TO_WISHLIST"));
+    await waitForElement(l("PLEASE_LOG_IN_TO_ADD_THE_PRODUCT_TO"));
+  });
+
+  test("quantity can only be 1 and above", async () => {
+    await type(l("[type='number']"), "");
+    let quantity = await text(l("[type='number']"));
+    expect(quantity).to.equal("1");
+    await type(l("[type='number']"), "1");
+    quantity = await text(l("[type='number']"));
+    expect(quantity).to.equal("11");
+  });
+});
+
+describe("related products", () => {
+  beforeEach(async () => {
+    await go("https://demo.saleor.io/product/white-plimsolls/88/");
+  });
+
+  test("related products also include current item", async () => {
+    await scrollToElement(l(".sc-iSDuPN_>_:nth-child(2)_.sc-bAeI"));
+    await waitForText(l("WHITE_PLIMSOLLS"), "White Plimsolls");
+  });
+
+  test("selecting other items from related items works", async () => {
+    await scrollToElement(l(".sc-iSDuPN_>_:nth-child(2)_.sc-bAeI"));
+    await click(l(".sc-iSDuPN_>_:nth-child(2)_.sc-bAeI"));
+    await waitForElement("h3");
+    const product = await text("h3");
+    expect(product).to.equal("Yellow Plimsolls");
+  });
+});
+
+describe("single product cart", () => {
+  beforeEach(async () => {
+    await go("https://demo.saleor.io/product/white-plimsolls/88/");
+  });
+
+  test("cart can be openend from product page", async () => {
+    await click(l("[data-src='/images/cart.svg']"));
+    await waitForElement(l("MY_BAG,_0_ITEMS"));
+  });
+
+  test("cart can be closed from product page", async () => {
+    await click(l("[data-src='/images/cart.svg']"));
+    await waitForElement(l("MY_BAG,_0_ITEMS"));
+    await click(l("[data-src='/images/x.svg']"));
+    await waitForNoElement(l("MY_BAG,_0_ITEMS"));
+  });
+
+  test("added to cart successfully", async () => {
+    await click(l(".product-description__variant-picke"));
+    await click(l("41"));
+    await click(l("ADD_TO_BASKET"));
+    await click(l("[data-src='/images/cart.svg']"));
+    await waitForText(l("SUBTOTAL_$44.10"), "Subtotal$44.10");
+  });
+
+  test("remove from cart successfully", async () => {
+    await click(l(".product-description__variant-picke"));
+    await click(l("41"));
+    await click(l("ADD_TO_BASKET"));
+    await click(l("[data-src='/images/cart.svg']"));
+    await waitForText(l("SUBTOTAL_$44.10"), "Subtotal$44.10");
+    await click(l(".cart__list__item__details__delete-"));
+    await waitForElement(l("0_ITEMS"));
   });
 });
