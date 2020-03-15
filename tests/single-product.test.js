@@ -7,6 +7,7 @@ const {
   go,
   hover,
   click,
+  waitForCode,
   waitForElement,
   waitForNoElement,
   waitForText,
@@ -84,16 +85,16 @@ describe("adding product to basket", () => {
 
   test("cannot add to basket without selecting variant", async () => {
     await waitForElement("button");
-    let disabled = await evaluate(() =>
+    await waitForCode(() =>
       document
         .querySelector("div.product-page__product__info button")
         .hasAttribute("disabled")
     );
-    expect(disabled).to.equal(true);
+
     await click(l(".product-description__variant-picke"));
     await click(l("41"));
 
-    disabled = await evaluate(() =>
+    const disabled = await evaluate(() =>
       document
         .querySelector("div.product-page__product__info button")
         .hasAttribute("disabled")
@@ -101,19 +102,19 @@ describe("adding product to basket", () => {
     expect(disabled).to.equal(false);
   });
 
-  test("only item in stock cannot be added to basket", async () => {
+  test("only item in stock can be added to basket", async () => {
     await click(l(".product-description__variant-picke"));
     await click(l("40"));
-    let disabled = await evaluate(() =>
+
+    await waitForCode(() =>
       document
         .querySelector("div.product-page__product__info button")
         .hasAttribute("disabled")
     );
-    expect(disabled).to.equal(true);
 
     await click(l(".product-description__variant-picke"));
     await click(l("41"));
-    disabled = await evaluate(() =>
+    const disabled = await evaluate(() =>
       document
         .querySelector("div.product-page__product__info button")
         .hasAttribute("disabled")
