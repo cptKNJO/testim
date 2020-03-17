@@ -12,14 +12,16 @@
     "scripts": {
         "start": "cross-env NODE_OPTIONS=--max-old-space-size=8196 testim run \"./tests/*.test.js\" -m selenium --require-credentials",
         "test": "npm start",
-        "dev-test": "cross-env NODE_OPTIONS=--max-old-space-size=8196 testim run \"./tests/**/*.test.js\" -m selenium --require-credentials --reporters=chrome,console",
+        "dev-test": "cross-env NODE_OPTIONS=--max-old-space-size=8196 testim run \"./tests/*.test.js\" -m selenium --require-credentials --reporters=chrome,console",
         "debug": "cross-env NODE_OPTIONS='--max-old-space-size=8196 --inspect=9229' testim run \"./tests/**/*.test.js\" -m selenium --require-credentials",
         "debug-file": "cross-env NODE_OPTIONS='--max-old-space-size=8196 --inspect=9229' testim -m selenium --require-credentials run",
-        "headless": "cross-env NODE_OPTIONS='--max-old-space-size=8196 --inspect=9229' testim run \"./tests/**/*.test.js\" -m selenium --require-credentials --headless",
+        "headless": "cross-env NODE_OPTIONS='--max-old-space-size=8196 --inspect=9229' testim run \"./tests/*.test.js\" -m selenium --require-credentials --headless",
         "ci": "cross-env NODE_OPTIONS=--max-old-space-size=8196 testim run \"./tests/**/*.test.js\" -m selenium --grid testim-grid"
     },
     "devDependencies": {
         "eslint": "^6.8.0",
+        "eslint-config-airbnb-base": "^14.1.0",
+        "eslint-plugin-import": "^2.20.1",
         "webpack": "^4.41.5"
     }
 }

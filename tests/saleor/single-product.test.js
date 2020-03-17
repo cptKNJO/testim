@@ -1,6 +1,5 @@
-"use strict";
 
-const expect = require("chai").expect;
+const { expect } = require("chai");
 const {
   evaluate,
   exists,
@@ -16,7 +15,7 @@ const {
   text,
   type,
   l,
-  Locator
+  Locator,
 } = require("testim");
 
 Locator.set(require("./locators/locators.js"));
@@ -33,40 +32,34 @@ describe("basic elements", () => {
   });
 
   test("first picture shown in set by default", async () => {
-    const imageSrc = await evaluate(() =>
-      document
-        .querySelector(
-          "div.product-page__product__gallery > div > div:nth-child(2) img"
-        )
-        .getAttribute("src")
-    );
+    const imageSrc = await evaluate(() => document
+      .querySelector(
+        "div.product-page__product__gallery > div > div:nth-child(2) img",
+      )
+      .getAttribute("src"));
     expect(imageSrc).to.have.string("sneakers_02_1.png");
   });
 
   test("different pictures displayed on hover", async () => {
-    let imageSrc = await evaluate(() =>
-      document
-        .querySelector(
-          "div.product-page__product__gallery > div > div:nth-child(2) img"
-        )
-        .getAttribute("src")
-    );
+    let imageSrc = await evaluate(() => document
+      .querySelector(
+        "div.product-page__product__gallery > div > div:nth-child(2) img",
+      )
+      .getAttribute("src"));
     expect(imageSrc).to.have.string("sneakers_02_1.png");
     await hover("div.product-page__product__gallery ul li:nth-child(2) img");
-    imageSrc = await evaluate(() =>
-      document
-        .querySelector(
-          "div.product-page__product__gallery > div > div:nth-child(2) img"
-        )
-        .getAttribute("src")
-    );
+    imageSrc = await evaluate(() => document
+      .querySelector(
+        "div.product-page__product__gallery > div > div:nth-child(2) img",
+      )
+      .getAttribute("src"));
     expect(imageSrc).to.have.string("sneakers_02_2.png");
   });
 
   test("proper pagination", async () => {
     await waitForText(
       l("Home_Footwear_White_Plimsolls"),
-      "HomeFootwearWhite Plimsolls"
+      "HomeFootwearWhite Plimsolls",
     );
   });
 
@@ -85,20 +78,16 @@ describe("adding product to basket", () => {
 
   test("cannot add to basket without selecting variant", async () => {
     await waitForElement("button");
-    await waitForCode(() =>
-      document
-        .querySelector("div.product-page__product__info button")
-        .hasAttribute("disabled")
-    );
+    await waitForCode(() => document
+      .querySelector("div.product-page__product__info button")
+      .hasAttribute("disabled"));
 
     await click(l(".product-description__variant-picke"));
     await click(l("41"));
 
-    const disabled = await evaluate(() =>
-      document
-        .querySelector("div.product-page__product__info button")
-        .hasAttribute("disabled")
-    );
+    const disabled = await evaluate(() => document
+      .querySelector("div.product-page__product__info button")
+      .hasAttribute("disabled"));
     expect(disabled).to.equal(false);
   });
 
@@ -106,19 +95,15 @@ describe("adding product to basket", () => {
     await click(l(".product-description__variant-picke"));
     await click(l("40"));
 
-    await waitForCode(() =>
-      document
-        .querySelector("div.product-page__product__info button")
-        .hasAttribute("disabled")
-    );
+    await waitForCode(() => document
+      .querySelector("div.product-page__product__info button")
+      .hasAttribute("disabled"));
 
     await click(l(".product-description__variant-picke"));
     await click(l("41"));
-    const disabled = await evaluate(() =>
-      document
-        .querySelector("div.product-page__product__info button")
-        .hasAttribute("disabled")
-    );
+    const disabled = await evaluate(() => document
+      .querySelector("div.product-page__product__info button")
+      .hasAttribute("disabled"));
     expect(disabled).to.equal(false);
   });
 

@@ -5,7 +5,7 @@ module.exports = {
         "node": true,
         "jest": true
     },
-    "extends": "eslint:recommended",
+    "extends": ["airbnb-base"],
     "globals": {
         "Atomics": "readonly",
         "SharedArrayBuffer": "readonly",
@@ -15,5 +15,6 @@ module.exports = {
         "ecmaVersion": 2018
     },
     "rules": {
+        'quotes': ['error', 'double']
     }
 };
