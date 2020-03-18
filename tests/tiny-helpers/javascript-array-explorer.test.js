@@ -95,7 +95,7 @@ describe("basic operations", async () => {
   });
 });
 
-describe.only("adding items", () => {
+describe("adding items", () => {
   beforeEach(async () => {
     await go("https://arrayexplorer.netlify.com/");
     await selectOption("#firstmethod > option:nth-child(2)");
