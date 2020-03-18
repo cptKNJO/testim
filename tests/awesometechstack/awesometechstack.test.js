@@ -17,9 +17,11 @@ const {
 
 Locator.set(require("./locators/locators.js"));
 
+const url = "https://awesometechstack.com/";
+
 describe("navigation", () => {
   beforeEach(async () => {
-    await go("https://awesometechstack.com/");
+    await go(url);
   });
 
   test("index", async () => {
@@ -48,7 +50,7 @@ describe("navigation", () => {
 
 describe("cookies", () => {
   beforeEach(async () => {
-    await go("https://awesometechstack.com/");
+    await go(url);
   });
 
   test("ensure cookie not enabled by default", async () => {
@@ -97,9 +99,9 @@ describe("cookies", () => {
 });
 
 
-describe.only("home", () => {
+describe("home", () => {
   beforeEach(async () => {
-    await go("https://awesometechstack.com/");
+    await go(url);
   });
 
   test("check if two analysis forms shown", async () => {

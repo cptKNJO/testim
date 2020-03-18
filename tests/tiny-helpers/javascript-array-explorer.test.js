@@ -7,9 +7,11 @@ const {
 
 Locator.set(require("./locators/locators.js"));
 
+const url = "https://arrayexplorer.netlify.com/";
+
 describe("basic elements", () => {
   beforeEach(async () => {
-    await go("https://arrayexplorer.netlify.com/");
+    await go(url);
   });
 
   test("check title", async () => {
@@ -48,7 +50,7 @@ describe("basic elements", () => {
 
 describe("basic operations", async () => {
   beforeEach(async () => {
-    await go("https://arrayexplorer.netlify.com/");
+    await go(url);
   });
 
   test("adding elements", async () => {
@@ -97,7 +99,7 @@ describe("basic operations", async () => {
 
 describe("adding items", () => {
   beforeEach(async () => {
-    await go("https://arrayexplorer.netlify.com/");
+    await go(url);
     await selectOption("#firstmethod > option:nth-child(2)");
   });
 

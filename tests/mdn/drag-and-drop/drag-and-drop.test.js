@@ -54,6 +54,6 @@ describe("drag and drop", () => {
       (destination) => document.querySelector(destination).children[1],
       "#dest_move",
     );
-    expect(childId).to.be.undefined;
+    expect(childId).to.be.undefined; // eslint-disable-line
   });
 });
