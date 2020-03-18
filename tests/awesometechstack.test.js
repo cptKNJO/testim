@@ -3,13 +3,14 @@ const { expect } = require("chai");
 const {
   click,
   evaluate,
-  exists,
   getCookie,
   go,
+  scrollToPosition,
   setCookie,
   test,
   text,
   waitForElement,
+  waitForText,
   l,
   Locator,
 } = require("testim");
@@ -21,7 +22,7 @@ describe("navigation", () => {
     await go("https://awesometechstack.com/");
   });
 
-  test("home in beta", async () => {
+  test("index", async () => {
     const title = (await text("h1")).trim();
     expect(title).to.equal("Website Tech Stack Analysis");
   });
@@ -45,7 +46,7 @@ describe("navigation", () => {
   });
 });
 
-describe.only("cookies", () => {
+describe("cookies", () => {
   beforeEach(async () => {
     await go("https://awesometechstack.com/");
   });
@@ -74,10 +75,11 @@ describe.only("cookies", () => {
     expect(clientCookie).to.have.string("cookie_control_consent");
   });
 
-  test.only("cookie popup enables cookie", async () => {
+  test("cookie popup enables cookie", async () => {
     const cookieData = {
       name: "cookie_control_consent",
       value: "true",
+      expires: new Date(new Date().valueOf() + 1000),
     };
 
     await waitForElement(".cookieControl__BarButtons");
@@ -92,16 +94,50 @@ describe.only("cookies", () => {
 
     expect(clientCookie).to.have.string("cookie_control_consent");
   });
+});
 
-  test.only("cookie popup does not show up when cookie enabled", async () => {
-    await waitForElement(".cookieControl__BarButtons");
 
-    let cookieDisabled = await exists(".cookieControl__BarButtons");
-    expect(cookieDisabled).to.equal(true);
+describe.only("home", () => {
+  beforeEach(async () => {
+    await go("https://awesometechstack.com/");
+  });
 
-    await click(".cookieControl__BarButtons button:nth-child(2)");
+  test("check if two analysis forms shown", async () => {
+    await waitForElement("form");
+    const noOfForms = await evaluate(() => document.querySelectorAll("form").length);
+    expect(noOfForms).to.equal(2);
+  });
 
-    cookieDisabled = await exists(".cookieControl__BarButtons");
-    expect(cookieDisabled).to.equal(false);
+  test("website section", async () => {
+    const y = await evaluate(() => document.querySelector("#websites").getBoundingClientRect().y);
+    const x = await evaluate(() => document.querySelector("#websites").getBoundingClientRect().x);
+    await scrollToPosition(
+      x, y,
+    );
+    await waitForText("#websites h2", "Websites");
+  });
+
+  test("technologies section", async () => {
+    const y = await evaluate(() => document.querySelector("#technologies").getBoundingClientRect().y);
+    const x = await evaluate(() => document.querySelector("#technologies").getBoundingClientRect().x);
+    await scrollToPosition(
+      x, y,
+    );
+    await waitForText("#technologies h2", "Technologies");
+  });
+
+  test("in beta is visible", async () => {
+    const beta = await evaluate(() => document.querySelector("h1").previousElementSibling.innerText);
+    expect(beta).to.equal("BETA");
+  });
+
+  test("button for websites takes to proper section", async () => {
+    await click(".icon-hero-btn");
+    await waitForText("#websites h2", "Websites");
+  });
+
+  test("button for technologies takes to proper section", async () => {
+    await click(".icon-trending-up");
+    await waitForText("#technologies h2", "Technologies");
   });
 });
