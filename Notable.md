@@ -16,7 +16,7 @@ modified: '2020-03-10T10:28:00.533Z'
 - examples for `scrollToPosition` show position parameters as object 
 
 ## API
-
+- scrollToPosition exports coordinates as objects incorrectly (should be int parameters)
 - resize() keeps flickering if dimensions beyond that of device
 - remove unused locators from folder after new ones are imported
 - submit(form) does not work in a lot of cases; clicking on submit button to submit most forms
