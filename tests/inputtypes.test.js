@@ -8,8 +8,10 @@ const {
   click,
   selectOption,
   waitForNoElement,
+  submit,
   test,
   text,
+  type,
   l,
   Locator,
 } = require("testim");
@@ -17,9 +19,11 @@ const {
 
 Locator.set(require("./locators/locators.js"));
 
+const url = "https://inputtypes.com/";
+
 describe("input type", () => {
   beforeEach(async () => {
-    await go("https://inputtypes.com/");
+    await go(url);
   });
 
   test("title", async () => {
@@ -102,5 +106,31 @@ describe("input type", () => {
     await selectOption(l("[name='inputMode']_[value='text']"));
     const inputText = await evaluate(() => document.querySelector(".input-item__display pre").innerText);
     expect(inputText).to.have.string("inputmode='text'");
+  });
+});
+
+describe("submitting form", () => {
+  beforeEach(async () => {
+    await go(url);
+  });
+
+  test("default form can be submitted empty", async () => {
+    await submit("form");
+  });
+
+  test("default form can be submitted with any text", async () => {
+    await type("input[type='text']", "testing");
+    await submit("form");
+  });
+
+  test("cannot submit text if number selected as input type", async () => {
+    await click(l("Input_Type:"));
+    await selectOption(l("[value='number']"));
+    await type("input[type='number']", "not a number");
+    await click("button[type='submit']");
+
+    // failed to validate form
+    const validated = await text(".input-item__validity-display");
+    expect(validated).to.equal("");
   });
 });
