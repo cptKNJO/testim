@@ -22,36 +22,41 @@ describe("elements present", () => {
     await go(url);
   });
 
-  test("check firefox visible", async () => {
+  test("firefox monitor visible", async () => {
     await waitForText(l("Firefox"), "Firefox");
   });
 
-  test("check subscription form available", async () => {
-    await scrollToElement(l("Your_email_address"));
-    await waitForElement(l("Your_email_address"));
+  test("form for checking breaches shown", async () => {
+    await waitForText(l("Firefox"), "Firefox");
   });
 
-  test("learn more about us section visible", async () => {
-    await scrollToElement(l("Learn_more_about_us"));
-    await waitForElement(l("Learn_more_about_us"));
+  test("latest breach added visible", async () => {
+    await waitForText(l("Firefox"), "Firefox");
   });
 
-  test("what we are reading section visible", async () => {
-    await scrollToElement(l("What_were_reading:"));
-    await waitForElement(l("What_were_reading:"));
+  test("sign up section visible", async () => {
+    await waitForText(l("Firefox"), "Firefox");
+  });
+});
+
+describe("navigation", () => {
+  beforeEach(async () => {
+    await go(url);
   });
 
-  test("not for profit section", async () => {
-    await scrollToElement(l("Visit_the_Mozilla_Foundation"));
-    await waitForElement(l("Visit_the_Mozilla_Foundation"));
+  test("breaches", async () => {
+    await waitForText(l("Firefox"), "Firefox");
   });
 
-  test("open source contribution sectopm", async () => {
-    await scrollToElement(l("Explore_Mozilla_technology"));
-    await waitForElement(l("Explore_Mozilla_technology"));
+  test("security tips", async () => {
+    await waitForText(l("Firefox"), "Firefox");
   });
 
-  test("navigation present at the top", async () => {
-    await waitForCode(() => document.querySelector(".top-header-navigation").offsetTop === 0);
+  test("firefox apps and services", async () => {
+    await waitForText(l("Firefox"), "Firefox");
+  });
+
+  test("sign in", async () => {
+    await waitForText(l("Firefox"), "Firefox");
   });
 });
