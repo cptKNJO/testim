@@ -17,7 +17,7 @@ const {
 } = require("testim");
 
 
-Locator.set(require("./locators/locators.js"));
+Locator.set(require("./locators/locators"));
 
 const url = "https://inputtypes.com/";
 
